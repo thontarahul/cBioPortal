@@ -1,5 +1,6 @@
 name: Build and publish docker image to ECR
 
+
 on:
   # Uncomment this if you want to trigger on push
   # push:
