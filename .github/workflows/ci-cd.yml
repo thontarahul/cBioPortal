@@ -1,16 +1,18 @@
-name: Test Workflow
+name: Build and publish docker image to ECR
 
 on:
-  push:
-    branches:
-      - main  # or the branch you are pushing to
+  workflow_dispatch:
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+  build-and-publish:
+    uses: Gilead-CPE/integration-workflow-docker/.github/workflows/workflow.yaml@v3.14.0
+    with:
+      image_tag: snapshot-${{ github.run_number }}.${{ github.run_attempt }}
+      lob_account_id: '637423326743 '
 
-      - name: Run a one-liner script
-        run: echo "Workflow is running!"
+      multi_docker_build_dir: '{"cbioportal-keycloak": "cbioportal-keycloak", "cbioportal-mongo": "cbioportal-mongo"}'
+      multi_dockerfile_path: '{"cbioportal-keycloak": "cbioportal-keycloak/Dockerfile", "cbioportal-mongo": "cbioportal-mongo/Dockerfile"}'
+      lifecycle_policy_file: policy.json
+      whitespace_check_excludes: '*.bat'
+
+    secrets: inherit
