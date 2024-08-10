@@ -1,6 +1,7 @@
 name: Build and publish docker image to ECR
 
 on:
+  # Uncomment this if you want to trigger on push
   # push:
   #   paths-ignore:
   #     - .editorconfig
@@ -11,16 +12,24 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-  docker:
-    uses: Gilead-CPE/integration-workflow-docker/.github/workflows/workflow.yaml@v3.14.0
-    with:
-      image_tag: snapshot-${{ github.run_number }}.${{ github.run_attempt }}
-      lob_account_id: '637423326743 '
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
 
-      multi_docker_build_dir: '{"cbioportal-keycloak": "cbioportal-keycloak", "cbioportal-mongo": "cbioportal-mongo"}' # OPTIONAL: path map to the docker build dir
-      multi_dockerfile_path: '{"cbioportal-keycloak": "cbioportal-keycloak/Dockerfile", "cbioportal-mongo": "cbioportal-mongo/Dockerfile"}' # OPTIONAL: path map to the Dockerfile
-      lifecycle_policy_file: policy.json  # OPTIONAL: path to the policy.json (default = 'policy.json')
-      #fetch_artifact: 'my_artifact'       # OPTIONAL: name (and optional path) of a github artifact to download
-      whitespace_check_excludes: '*.bat'  # OPTIONAL: pathspec patterns to ignore whitespace errors
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    secrets: inherit
+      - name: Docker Build and Publish
+        uses: Gilead-CPE/integration-workflow-docker/.github/workflows/workflow.yaml@v3.14.0
+        with:
+          image_tag: snapshot-${{ github.run_number }}.${{ github.run_attempt }}
+          lob_account_id: '637423326743 '
+
+          multi_docker_build_dir: '{"cbioportal-keycloak": "cbioportal-keycloak", "cbioportal-mongo": "cbioportal-mongo"}' # OPTIONAL: path map to the docker build dir
+          multi_dockerfile_path: '{"cbioportal-keycloak": "cbioportal-keycloak/Dockerfile", "cbioportal-mongo": "cbioportal-mongo/Dockerfile"}' # OPTIONAL: path map to the Dockerfile
+          lifecycle_policy_file: policy.json  # OPTIONAL: path to the policy.json (default = 'policy.json')
+          #fetch_artifact: 'my_artifact'       # OPTIONAL: name (and optional path) of a github artifact to download
+          whitespace_check_excludes: '*.bat'  # OPTIONAL: pathspec patterns to ignore whitespace errors
+
+        secrets: inherit
