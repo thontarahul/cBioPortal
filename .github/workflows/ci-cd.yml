@@ -26,3 +26,4 @@ jobs:
       whitespace_check_excludes: '*.bat'  # OPTIONAL: pathspec patterns to ignore whitespace errors
 
     secrets: inherit
+
