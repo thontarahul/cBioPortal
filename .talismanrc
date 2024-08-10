@@ -1,0 +1,11 @@
+---
+version: "1.0"
+
+threshold: medium
+
+fileignoreconfig:
+- filename: .github/workflows/ci-cd.yaml
+  checksum: be94d229d1f73b9e89a4930ba6e30a5d44e2e4cc2ddf2972ab27217f9a759104
+
+allowed_patterns:
+- (secret|key|password)s?
